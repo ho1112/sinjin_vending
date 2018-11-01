@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.gropsc.vending.dao.VendingDAO">
+
+<!-- client側 -->
+
+<!-- 初期画面の会社logo - top -->
+<select id="getLogoOfven" resultType="Company" parameterType="int">
+	SELECT distinct company_code from vendingdb.vending_data
+	where vending_code = #{vending_code} AND vending_delete = '1'
+</select>
+<!-- どの自販機にある商品コードを呼び出し - top -->
+<select id="getGoodsOfven" resultType="Goods" parameterType="int">
+	select * from vendingdb.vending_data
+	where vending_code = #{vending_code} AND vending_delete = '1'
+</select>
+<!-- 会社のコードで商品の情報を獲得　- top -->
+<select id="getGoodsSelect" resultType="Goods" parameterType="int">
+	select * from vendingdb.goods
+	where goods_code = #{goods_code}
+</select>
+<!-- 社員認証  - check -->
+<select id="login" resultType="User" parameterType="String">
+	select * from vendingdb.user
+	where user_code = #{code} AND user_delete = '1'
+</select>
+<!-- 商品の説明 - goodsSelect -goodsSelect -->
+<select id="goodsInfo" resultType="String" parameterType="String">
+	select goods_info from vendingdb.goods
+	where goods_name = #{goods_name}
+</select>
+<!-- 子画面の情報出力 - goodsPopup -->
+<select id="popupInfo" resultType="Goods" parameterType="String">
+	select * from vendingdb.goods
+	where goods_name = #{goods_name}
+</select>
+<!-- 会社のコードで会社の情報呼び出し-子画面 -->
+<select id="selectCompany" resultType="Company" parameterType="int">
+	select * from vendingdb.company
+	where company_code = #{company_code}
+</select>
+<!-- 商品名で検索  -register-->
+<select id="selectGoods" resultType="Goods" parameterType="String">
+	select * from vendingdb.goods
+	where goods_name = #{goods_name}
+</select>
+<!-- sales_code獲得 -register -->
+<select id="getSalesCode" resultType="Integer">
+	select max(sales_code) from vendingdb.sales_statement
+</select>
+<!-- 購入情報をDBに入れる -register -->
+<insert id="sales" parameterType="register">
+	insert into vendingdb.sales_statement
+	VALUES (#{sales_code}, #{company_code}, #{company_name}, #{goods_code}, #{goods_name}, #{goods_price}, #{sales_count}, #{sales_time}, #{total_price})
+</insert>
+<!-- 在庫 -->
+<update id="updateStock" parameterType="map">
+	update vendingdb.vending_data
+	set goods_stock = goods_stock - #{sales_count}
+	where goods_code = #{goods_code} AND vending_code = #{vending_code}
+</update>
+<!-- 帳票 -->
+<select id="getAllCompany" resultType="Company">
+	select * from vendingdb.company
+</select>
+<select id="getAllGoods" resultType="Goods">
+	select * from vendingdb.goods
+</select>
+<!-- 残高 -->
+<update id="updateBalance" parameterType="map">
+	update vendingdb.vending_machine
+	set vending_balance = vending_balance + #{balance}
+	where vending_code = #{vending_code}
+</update>
+</mapper>

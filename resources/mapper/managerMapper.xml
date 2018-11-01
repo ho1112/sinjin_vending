@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.gropsc.vending.dao.ManagerDAO">
+
+<!-- 管理者側 -->
+
+<!-- 管理者認証　-managerCheck -->
+<select id="manager_login" resultType="User" parameterType="String">
+	select * from vendingdb.user
+	where user_code = #{code} AND user_category = 'ma'
+</select>
+<!-- 会社削除　-managerGoods -->
+<update id="company_deleteOfven" parameterType="int">
+	update vendingdb.vending_data
+	set vending_delete = '0'
+	where company_code = #{company_code}
+</update>
+<!-- 商品削除　-managerGoods -->
+<update id="goods_deleteOfven" parameterType="map">
+	update vendingdb.vending_data
+	set vending_delete = '0'
+	where goods_code = #{goods_code} AND vending_code = #{vending_code}
+</update>
+<!-- 商品登録 -managerGoods-->
+<insert id="goods_sign" parameterType="Goods">
+	insert into vendingdb.goods
+	(goods_code,goods_name,company_code,goods_info,goods_image,goods_price)
+	VALUES (#{goods_code},#{goods_name},#{company_code},#{goods_info},#{goods_image},#{goods_price})
+</insert>
+<insert id="goods_signOfven" parameterType="map">
+	insert into vendingdb.vending_data
+	(vending_code,company_code,goods_code,goods_price)
+	VALUES (#{vending_code},#{company_code},#{goods_code},#{goods_price})
+</insert>
+<!-- 商品修正 -managerGoods-->
+<update id="goods_update" parameterType="Goods">
+	update vendingdb.goods
+	set goods_name = #{goods_name},
+	goods_info = #{goods_info},
+	goods_price = #{goods_price},
+	goods_image = #{goods_image}
+	where goods_code = #{goods_code}
+</update>
+<!-- 次のgoods_code確認 -managerGoods-->
+<select id="getNextGoods_code" resultType="int">
+	select max(goods_code) from vendingdb.goods
+</select>
+
+<!-- 会社登録 -managerGoods -->
+<insert id="company_sign" parameterType="Company">
+	insert into vendingdb.company
+	(company_code,company_name,company_image)
+	VALUES (#{company_code},#{company_name},#{company_image})
+</insert>
+
+<!-- 会社修正 -managerGoods -->
+<update id="company_update" parameterType="Company">
+	update vendingdb.company
+	set company_name = #{company_name},
+	company_image = #{company_image}
+	where company_code = #{company_code}
+</update>
+<!-- Next company_code -->
+<select id="getNextCompany_code" resultType="int">
+	select max(company_code) from vendingdb.company	
+</select>
+
+<insert id="company_signOfven" parameterType="map">
+	insert into vendingdb.vending_data
+	(vending_code,company_code)
+	VALUES (#{vending_code},#{company_code})
+</insert>
+
+<!-- 社員list -->
+<select id="getUser" parameterType="map" resultType="User">
+	select * from vendingdb.user
+	where user_delete = 1 AND vending_code = #{vending_code} AND user_category = #{category}
+</select>
+<update id="user_delete" parameterType="map">
+	update vendingdb.user
+	set user_delete = '0'
+	where user_code = #{user_code} AND vending_code = #{vending_code}
+</update>
+<insert id="user_sign" parameterType="User">
+	insert into vendingdb.user
+	(user_code,user_name,user_category,vending_code)
+	VALUES(#{user_code},#{user_name},#{user_category},#{vending_code})
+</insert>
+<update id="user_update" parameterType="User">
+	update vendingdb.user
+	set user_name = #{user_name}
+	where user_code = #{user_code} AND vending_code = #{vending_code}
+</update>
+<select id="getNextUser_code" parameterType="String" resultType="int">
+	select count(*) from vendingdb.user
+	where user_category = #{category}
+</select>
+<!-- 自販機 -->
+<select id="getVendingData" parameterType="int" resultType="VendingData">
+	select * from vendingdb.vending_data
+	where vending_code = #{vending_code} AND vending_delete = '1'
+</select>
+<select id="getSelectVendingMachine" parameterType="int" resultType="VendingMachine">
+	select * from vendingdb.vending_machine
+	where vending_code = #{vending_code}
+</select>
+<select id="getVendingMachine" resultType="VendingMachine">
+	select * from vendingdb.vending_machine
+	where vending_delete = '1'
+</select>
+<!-- 在庫修正 -managerVending -->
+<update id="updateStock" parameterType="VendingData">
+	update vendingdb.vending_data
+	set goods_stock = #{goods_stock}
+	where vending_code = #{vending_code} AND goods_code = #{goods_code}
+</update>
+<!-- 自販機 -->
+<update id="updateVending" parameterType="VendingMachine">
+	update vendingdb.vending_machine
+	set vending_name = #{vending_name},
+	vending_balance = #{vending_balance}
+	where vending_code = #{vending_code}
+</update>
+<select id="getNextVending_code" resultType="int">
+	select max(vending_code) from vendingdb.vending_machine	
+</select>
+<insert id="vending_sign" parameterType="VendingMachine">
+	insert into vendingdb.vending_machine
+	VALUES (#{vending_code},#{vending_name},#{vending_balance},'1')
+</insert>
+<update id="vending_delete" parameterType="int">
+	update vendingdb.vending_machine
+	set vending_delete = '0'
+	where vending_code = #{vending_code}
+</update>
+<!-- 帳票 -->
+<select id="companyReport" parameterType="map" resultType="register">
+	select company_code,company_name,sum(total_price) as total_price,
+	sum(sales_count) as sales_count
+	from vendingdb.sales_statement
+	where date(sales_time) between #{date1} AND #{date2}
+	AND company_code = #{code}	
+</select>
+<select id="goodsReport" parameterType="map" resultType="register">
+	select company_name,goods_code,goods_name,sum(total_price) as total_price,
+	sum(sales_count) as sales_count, goods_price
+	from vendingdb.sales_statement
+	where date(sales_time) between #{date1} AND #{date2}
+	AND goods_code = #{code}	
+</select>
+<select id="reportList" parameterType="map" resultType="register">
+	select * from vendingdb.sales_statement
+	where date(sales_time) between #{date1} AND #{date2}
+	AND
+	<choose>
+		<when test="flag == 'company_name'">
+		company_code = #{code}
+		</when>
+		<when test="flag == 'goods_name'">
+		goods_code = #{code}
+		</when>
+	</choose>
+</select>
+
+</mapper>

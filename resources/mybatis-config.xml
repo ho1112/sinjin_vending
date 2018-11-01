@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<!-- typealias와 mappers를 완성하시오 -->
+	<typeAliases>
+		<typeAlias type="com.gropsc.vending.vo.User" alias="User"/>
+		<typeAlias type="com.gropsc.vending.vo.Goods" alias="Goods"/>
+		<typeAlias type="com.gropsc.vending.vo.Company" alias="Company"/>
+		<typeAlias type="com.gropsc.vending.vo.GoodsList" alias="GoodsList"/>
+		<typeAlias type="com.gropsc.vending.vo.register" alias="register"/>
+		<typeAlias type="com.gropsc.vending.vo.VendingMachine" alias="VendingMachine"/>
+		<typeAlias type="com.gropsc.vending.vo.VendingData" alias="VendingData"/>
+	</typeAliases>
+	<mappers>
+		<mapper resource="mapper/mapper.xml" />
+		<mapper resource="mapper/managerMapper.xml" />
+	</mappers>
+	
+	
+</configuration>
