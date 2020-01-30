@@ -47,3 +47,223 @@
 	            return firstString_o1.compareTo(firstString_o2);
 	        }
 	    }
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    //TPX010030.jsp
+"use strict";
+
+let maxPage = 0;
+// Document Ready Event発生時の処理
+$(function() {
+	// 遷移情報の初期化
+	// $("#hselectd").value = "";
+	document.getElementById("hselected").value = "";
+//	var linesperpage = document.getElementById("linesperpage");
+	var linesperpage = $("#linesperpage");
+	var hlinesperpage = document.getElementById("hlinesperpage");
+	var contentmenu = $("#content-menu-a032")[0];
+
+	var thissubmit = function(lasturl) {
+		document.getElementById("hselected").value = lasturl; // "TPX010030";
+
+		var url = $('#formtpx010010').attr('action');
+		url = url.slice(0, url.lastIndexOf("/"));
+
+		$('#formtpx010010').attr('action', url + "/" + lasturl);
+
+		$('#formtpx010010').submit();
+
+	}
+
+	// 一覧表示画面遷移ボタン
+	// $("#content-menu-a032")[0].addEventListener('click', function() {
+	contentmenu.addEventListener('click', function() {
+		thissubmit("TPX010030");
+	}, false);
+
+	// dropdownlist currentidsの設定
+	var createcurrentids = function(issubmit) {
+		var currentids = document.getElementById("currentids");
+		var tpx010040count = document.getElementById("tpx010040count");
+		var count;
+		var lines;
+		var upper = 0;
+		var start = 0;
+		var option;
+		var text;
+
+		// option要素を削除
+		while (0 < currentids.childNodes.length) {
+			currentids.removeChild(currentids.childNodes[0]);
+		}
+
+		if (tpx010040count !== null && tpx010040count !== undefined) {
+			count = tpx010040count.value;
+
+			if (count !== null && count !== undefined) {
+				if (issubmit && linesperpage.value !== null
+						&& linesperpage.value !== undefined
+						&& (!isNaN(linesperpage.value))) {
+					lines = Number(linesperpage.value);
+
+				} else {
+					lines = Number(hlinesperpage.value);
+				}
+				let page = 1;
+				while (upper < count) {
+					// option要素を生成
+					start = upper + 1;
+					upper = Math.min((upper + lines), count);
+					option = document.createElement('option');
+					text = document.createTextNode((start + '') + '-'
+							+ (upper + ''));
+					document.creact
+					option.appendChild(text);
+					//20/01/30 value 追加
+					option.value = page;
+					page++;
+
+					// option要素を追加
+					currentids.appendChild(option);
+
+				}
+				maxPage = page-1;
+			}
+
+			if (issubmit) {
+				thissubmit("TPX010030/init");
+
+			}
+
+		}
+	}
+
+	//20/01/30 表示行数プルダウン初期表示設定
+	let selectedBox = $("#lpp").val();
+	$('#linesperpage option[value='+ selectedBox +']').attr('selected', true);
+
+	/*
+
+	linesperpage.addEventListener('change', function() {
+		alert("linesperpage onchange");
+
+		createcurrentids(true);
+
+	}, false);*/
+
+	linesperpage.value = hlinesperpage.value;
+	createcurrentids(false);
+
+
+	//20/01/30 ページプルダウン設定
+	selectedPageInit();
+
+
+}); //end 初期化
+
+
+//2020/01/29 表示行数プルダウン変更イベント
+$("#linesperpage").change(function(){
+	let maxCount = $("#tpx010040count").val();
+
+	let selectedLine =linesperpage.options[linesperpage.selectedIndex].text
+
+	//currentpage初期化
+	$("#currentpage").val('');
+
+	//再検索を行う
+	$("#formtpx010040return").submit();
+});
+
+//2020/01/30 ページプルダウン変更イベント
+$("#currentids").change(function(){
+	let selectedPage = $("#currentids option:selected").val();
+	$("#currentpage").val(selectedPage);
+	//再検索を行う
+	$("#formtpx010040return").submit();
+
+});
+
+//20/01/30 ページプルダウン表示設定
+function selectedPageInit() {
+	let selectedPage = $("#currentpage").val();
+	$('#currentids option[value='+ selectedPage +']').attr('selected', true);
+}
+
+//20/01/30 ページボタンクリック
+$(".movePageButton").click(function(){
+	let id = $(this).attr('id');
+	switch(id) {
+	case 'firstPage' :
+		$("#currentpage").val("1");
+		$("#formtpx010040return").submit();
+		break;
+	case 'previousPage' :
+		if($("#currentpage").val() != "1"){
+			$("#currentpage").val(Number($("#currentpage").val()) -1);
+			$("#formtpx010040return").submit();
+		}
+		break;
+	case 'nextPage' :
+		if($("#currentpage").val() != maxPage){
+			$("#currentpage").val(Number($("#currentpage").val()) +1);
+			$("#formtpx010040return").submit();
+		}
+		break;
+	case 'lastPage' :
+		$("#currentpage").val(maxPage);
+		$("#formtpx010040return").submit();
+		break;
+	}
+
+});
+
+//20/01/30 scrollbar ▲ページ上部に移動
+$(".move-to-top").click(function(){
+	let scrollTop = $(".tableTop tbody").scrollTop();
+	$(".tableTop tbody").scrollTop(0);
+})
+
+//20/01/30 一覧画面再整列
+$(".lnk0").click(function(){
+	//ソートをtoggle
+	let sort = $("#sort").val();
+	if(sort == 'sort-01'){
+		$("#sort").val('sort-02');
+	} else {
+		$("#sort").val('sort-01');
+	}
+
+	switch($(this).attr('value')){
+	case "指数修正日" :
+		$("#radioorder").val("radioorder-01");
+		break;
+	case "情報登録日" :
+		$("#radioorder").val("radioorder-02");
+		break;
+	case "銘柄コード" :
+	$("#radioorder").val("radioorder-03");
+		break;
+	}
+	$("#formtpx010040return").submit();
+
+
+	//再整列(再検索)
+
+});
+
+
+
+
+
+
+
+
+
+
+
