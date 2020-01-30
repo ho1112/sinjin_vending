@@ -1,0 +1,49 @@
+//20/01/30 ソート
+		class CustomComparator implements Comparator<List<String>>
+	    {
+	        @Override
+	        public int compare(List<String> o1, List<String> o2)
+	        {
+	        	//銘柄コード[0], 指数修正日[2], 情報登録日[4], 事象[8]
+	        	//基本設定：昇順（1,2,3...）
+	        	/* 対象
+	        	 * 	指数修正日 display-01
+	        	 * 	情報登録日 display-02
+	        	 *
+	        	 * 表示順
+	        	 * 	期間順 radioorder-01
+	        	 * 	事象順 radioorder-02
+	        	 * 	銘柄コード順 radioorder-03
+	        	 * 	ISINコード順 radioorder-04(破棄)
+	        	 *
+	        	 * 昇順（1,2,3...）sort-01
+	        	 * 降順（9,8,7...）sort-02
+	        	 */
+	        	int index = 0;
+	        	switch(form.getRadioorder()) {
+	        	//期間順の場合
+	        	case "radioorder-01" :
+	        		//指数修正日
+	        		if(form.getDisplay().equals(DISPLAY01)) {
+	        			index = 2;
+	        		}//情報登録日
+	        		else {
+	        			index =4;
+	        		}
+	        		break;
+        		//事象順の場合
+	        	case "radioorder-02" :
+	        		index = 8;
+	        		break;
+	        	//銘柄コード順の場合
+	        	case "radioorder-03" :
+	        		break;
+	        	//ISINコード順の場合
+	        	case "radioorder-04" :
+	        		break;
+	        	} //end switch
+	            String firstString_o1 = o1.get(index);
+	            String firstString_o2 = o2.get(index);
+	            return firstString_o1.compareTo(firstString_o2);
+	        }
+	    }
