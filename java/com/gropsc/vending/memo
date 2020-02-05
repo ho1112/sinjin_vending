@@ -48,9 +48,37 @@
 	        }
 	    }
 	    
+		Collections.sort(parent, new CustomComparator());
+
+		//降順（9,8,7...）の場合
+		if(form.getSort().equals("sort-02")) {
+			Collections.reverse(parent);
+		}
+
+		//詳細TPX010050 seq再付与
+		int seq = 0;
+		for(List<String> list :parent) {
+			list.set(11, ""+seq);
+//			System.out.println(seq+" : "+list.toString());
+			parent.set(seq, list);
+			seq++;
+			if(seq == Integer.parseInt(form.getLinesperpage())) break;
+		}
+		if(form.getIndex() != null && !(form.getIndex().trim().equals("")) ) {
+			//詳細画面データ作り
+			for(List<String> list :parent) {
+				if(list.get(11).equals(form.getIndex())) {
+					parent.clear();
+					parent.add(list);
+					break;
+				}
+			}
+		}
+
+		//System.out.println("parent : "+parent.toString());
+		return parent;	    
 	    
-	    
-	    
+＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝	    
 	    
 	    
 	    
