@@ -267,7 +267,9 @@ Calendar calendar = Calendar.getInstance();
 calendar.setTimeZone(time);;
 now = calendar.getTime();
 
-
+====================================
+캐쉬 저장 안하는 법
+개발자모드-네트워크-Disable cache체크
 
 
 
