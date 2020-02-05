@@ -258,7 +258,14 @@ $(".lnk0").click(function(){
 });
 
 
-
+＝＝＝＝＝＝＝＝＝
+지역표준시 따는법
+Date now = new Date();
+TimeZone time;
+time = TimeZone.getTimeZone("JST");
+Calendar calendar = Calendar.getInstance();
+calendar.setTimeZone(time);;
+now = calendar.getTime();
 
 
 
