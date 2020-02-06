@@ -318,5 +318,6 @@ document.querySelector('div')
 document.querySelectorAll('div')
 
 요약하면 querySelector, querySelectorAll로 자바스크립트를 제이쿼리처럼 사용가능
-
+http://jeonghwan-kim.github.io/2018/01/25/before-jquery.html
+=========================================================================================================
 
