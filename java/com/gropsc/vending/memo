@@ -303,8 +303,20 @@ target="_blank" <-- 새창
 target="_top" <-- 브라우저전체
 target="_parent" <-- 부모프레임
 target="_self" <-- 현재프레임
-====================================
+===================================
+제이쿼리 대신 자바스크립트로 돔 불러내기
+document.getElementById('app')
+document.querySelector('#app')
 
+document.getElementsByClassName('container')
+document.querySelector('.container')
+document.querySelectorAll('.container')
 
+$('div')
+document.getElementsByTagName('div')
+document.querySelector('div')
+document.querySelectorAll('div')
+
+요약하면 querySelector, querySelectorAll로 자바스크립트를 제이쿼리처럼 사용가능
 
 
