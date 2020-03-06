@@ -377,7 +377,7 @@ nhn은 이렇게
     이벤트페이지(미니게임 - 로또, 가위바위보, 부르마블?)	
 	
 	
-
+<form action="/target.do" autocomplete="off">
 
 
 
