@@ -320,6 +320,24 @@ document.querySelectorAll('div')
 요약하면 querySelector, querySelectorAll로 자바스크립트를 제이쿼리처럼 사용가능
 http://jeonghwan-kim.github.io/2018/01/25/before-jquery.html
 =========================================================================================================
+function addEvent(func){//사용자 정의함수. 인자로 함수를 받는다.
+    var oldonload = window.onload;//처음에 로드한 함수를 변수에 저장한다.없다면 null
+    if(typeof window.onload != "function"){//타입을 검사하여 처음로드되는 것인지 판단
+        window.onload = func;//처음로드되는 함수라면 등록
+    }else{
+        window.onload = function(){//이미 로드된 함수가 있다면 둘다 호출
+            oldonload();
+            func();
+        }
+    }
+}
+
+addEvent(func1);
+addEvent(func2);
+
+2개의 서로다른 함수를 로드하는 새로운 사용자 정의 함수이다.
+=========================================================================================================
+
 
 		
 		
